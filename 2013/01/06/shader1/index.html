@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>骑马与砍杀游戏中的shader初探 - 風立ちぬ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=shader>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a class="title-main" href="/" class="logo">風立ちぬ</a>
+    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+  </div>
+</header>
+      <main>
+        <section class="post">
+  <div class="post-bg-dark">
+    <div class="post-item">
+        <a class="post-title" href="/2013/01/06/shader1/">骑马与砍杀游戏中的shader初探</a>
+        <time class="post-date">January 6 2013</time>
+        <div class="post-content" >
+          <h3 id="什么是Shader？"><a href="#什么是Shader？" class="headerlink" title="什么是Shader？"></a>什么是Shader？</h3><p>可以翻译成着色器，简单的来说就是你的模型效果最后都是通过它在游戏里渲染才能看得到。做美工的同学都知道，在openbrf里不选择好着色器就可能看不到需要的效果，比如没有法线效果等等。</p>
+<a id="more"></a>
+<h3 id="如何增加shader？"><a href="#如何增加shader？" class="headerlink" title="如何增加shader？"></a>如何增加shader？</h3><p>骑马与砍杀本身有一系列核心Shader，你可以在根目录的CommonRes里找到core_shaders.brf，当需要添加自己的shader时，你需要在自己的Mod里建一个shader的brf文件，然后在菜单上导入–新建着色层。至于中间的数据栏该填什么内容，我不清楚，这个急需补充。最重要一点，数据栏里的 技术 （Technique.），这个是核心，该处的内容即是.fx定设置的Technique名。</p>
+<h3 id="如何编写Technique？"><a href="#如何编写Technique？" class="headerlink" title="如何编写Technique？"></a>如何编写Technique？</h3><p>既然Technique是新增shader必须的，那么怎么写呢，这时候你就要下载官方的自定义shader包了。里面的内容，暂时你只需知道两个compile_fx.bat用于编译，mb.fx是我们需要编辑的。<br>简单介绍下文件结构，开始一大串宏和常量的定义。接下来是一些函数的定义，之后的节奏就是结构体的定义，VertexShader,  PixelShader, Technique. 这个顺序，反复。其中一些其他内容省略了，因为我也不知道他们是干嘛的。<br>Technique.是目前我们迫切需要的，有这个才能做成shader嘛。那我们呢举一个例子看看Technique的结构。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">technique notexture</span><br><span class="line">&#123;</span><br><span class="line">        pass P0</span><br><span class="line">        &#123;</span><br><span class="line">                VertexShader = compile vs_2_0 vs_main_notexture();</span><br><span class="line">                PixelShader = compile ps_2_0 ps_main_notexture();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看到这个technique包含了一个pass P0，实际上一个technique可以包含多个pass。<br>这个pass P0中有两条语句。分别用来编译成VertexShader和PixelShader。<br>VertexShader = compile vs_2_0 vs_main_notexture();<br>compile 就是编译嘛， vs_2_0是shader版本，也可以是1_1 或者3_0，就是版本的新旧啦。<br>最后这个vs_main_notexture()，完成一些渲染效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">VS_OUTPUT_NOTEXTURE vs_main_notexture(float4 vPosition : POSITION, float4 vColor : COLOR)</span><br><span class="line">&#123;</span><br><span class="line">        VS_OUTPUT_NOTEXTURE Out;</span><br><span class="line"></span><br><span class="line">        Out.Pos = mul(matWorldViewProj, vPosition);</span><br><span class="line">        Out.Color = vColor * vMaterialColor;</span><br><span class="line">        float3 P = mul(matWorldView, vPosition); //position in view space</span><br><span class="line">        //apply fog</span><br><span class="line">        float d = length(P);</span><br><span class="line">        float4 vWorldPos = (float4)mul(matWorld,vPosition);</span><br><span class="line">        Out.Fog = get_fog_amount_new(d, vWorldPos.z);</span><br><span class="line"></span><br><span class="line">        return Out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然这个之前肯定有一个结构体定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct VS_OUTPUT_NOTEXTURE</span><br><span class="line">&#123;</span><br><span class="line">        float4 Pos           : POSITION;</span><br><span class="line">        float4 Color         : COLOR0;</span><br><span class="line">        float  Fog           : FOG;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>同理对于PixelShader也是如此。<br>暂时看不懂这些没关系。<br>你只要知道technique 改怎么写，需要什么就ok了。</p>
+<p>记住technique 由 pass 组成， pass 由编译完的VertexShader 和PixelShader 组成，<br>VertexShader与PixelShader需要两个结构体。</p>
+
+        </div>
+        
+          <ul class="post-tag-list">
+          
+            <li class="post-tag">
+              <span class="number-sign">#</span>
+              shader
+            </li>
+          
+          </ul>
+                  
+    </div>
+  </div>
+</section>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by Hexo and Theme by Streak 
+  </div>
+  <div class="copright">
+    &copy; 2018
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
