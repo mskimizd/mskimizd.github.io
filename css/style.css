@@ -34,6 +34,7 @@
   overflow: auto;
   color: #666666;
   line-height: 22.4px;
+  font-size: 14px;
 }
 .post-content .highlight pre {
   border: none;
@@ -69,30 +70,6 @@
 }
 .post-content .highlight .line.marked {
   background: #515151;
-}
-.post-content .highlight:before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0px;
-  width: 10px;
-  height: 10px;
-  border: 2px solid transparent;
-  left: 0px;
-  border-left-color: #e22020;
-  border-top-color: #e22020;
-}
-.post-content .highlight:after {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: 0px;
-  width: 10px;
-  height: 10px;
-  border: 2px solid transparent;
-  right: 0px;
-  border-right-color: #e22020;
-  border-bottom-color: #e22020;
 }
 .post-content .gist {
   margin: 0 -20px;
@@ -300,8 +277,13 @@ ul {
   line-height: 32px;
   border-left: 4px solid #e22020;
 }
+.post-item .post-content img {
+  width: 100%;
+}
+.post-item .post-content a {
+  border-bottom: 1px solid #333;
+}
 .post-item .post-more-link {
-  padding: 30px 0;
   font-style: italic;
   font-weight: lighter;
 }

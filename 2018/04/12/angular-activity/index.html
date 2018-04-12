@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Angularjs实现Github的Contribution activity图表 - 風立ちぬ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=javascript,angularjs>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a class="title-main" href="/" class="logo">風立ちぬ</a>
+    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+  </div>
+</header>
+      <main>
+        <section class="post">
+  <div class="post-bg-dark">
+    <div class="post-item">
+        <a class="post-title" href="/2018/04/12/angular-activity/">Angularjs实现Github的Contribution activity图表</a>
+        <time class="post-date">April 12 2018</time>
+        <div class="post-content" >
+          <p>之前某天注意到Github的Profile中的Contribution activity图表（虽然自己是一片白 ╮(~▽~)╭ ），就想模仿一下。当时正好在用Angularjs，就试着写了一个Angularjs模块来实现这个效果。</p>
+<a id="more"></a>
+<img src="/2018/04/12/angular-activity/github-contribution-activity.jpg">
+<p>首先我们看来一下Github的这个Contribution activity图表。</p>
+<p>它由一个个小方块组成，每个方块代表一天。每列7个方块代表一周，共有53列，包含过去一年的所有日期。</p>
+<p>Github的这个表的第一列是填满的，它包含的日期是比一年多几天的，而我当时的实现时候稍微有点不同，只绘制了365个格子，所以第一列是从一年前的今天开始，并没有填满。年久失修的代码也懒得改了(￣_￣ )，还是按照当时的代码来说吧。</p>
+<p>图表背后的数据格式就是一个n*7的数组，所以先设置一个空的二维数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scope.days = [[],[],[],[],[],[],[]];</span><br></pre></td></tr></table></figure>
+<p>数组中每个数组存的就是一年内每个星期n的日期数据。</p>
+<p>要填满这个数组，首先我们要获取一年前的今天的日期对象，以及当天是星期几。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> today = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="keyword">var</span> oneYearAgo = <span class="keyword">new</span> <span class="built_in">Date</span>((today.getTime() - <span class="number">365</span> * <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000</span> ));</span><br><span class="line"><span class="keyword">var</span> weekdayCursor = oneYearAgo.getDay();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dayCursor = oneYearAgo;</span><br></pre></td></tr></table></figure>
+<p>从这个<code>weekdayCursor</code>开始循环365次，填满每个星期的数据。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="number">365</span>; i++)&#123;</span><br><span class="line">    rowNo = weekdayCursor % <span class="number">7</span>;</span><br><span class="line">    colNo = <span class="built_in">parseInt</span>(weekdayCursor / <span class="number">7</span>);</span><br><span class="line"></span><br><span class="line">    scope.days[rowNo][colNo] = ... <span class="comment">// 填写数据...</span></span><br><span class="line"></span><br><span class="line">    dayCursor = <span class="keyword">new</span> <span class="built_in">Date</span>(dayCursor.getTime() + <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000</span>); <span class="comment">// 日期+1</span></span><br><span class="line">    weekdayCursor = weekdayCursor + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时，图表的所有日期块和数据已经准备完成，之后为图表添加星期和月份标注。<br>标注的信息在循环时存储在日期块的数据中。</p>
+<p>第一列的日期块存储对应的星期信息，即 <code>colNo == 0</code> 时。</p>
+<p>第一行的信息块存储对应的月份信息，即 <code>rowNo == 6</code> 。同时当前日期块的月份信息和当前的月份游标不同，即该日期块在一个新的月份下，因为不需要每一列都显示对应的月份。</p>
+<p>最后就是按照数据使用Angualrjs渲染。</p>
+<img src="/2018/04/12/angular-activity/angular-activity.jpg">
+<p>下载 <a href="https://github.com/mskimizd/" target="_blank" rel="noopener">完整代码</a></p>
+
+        </div>
+        
+          <ul class="post-tag-list">
+          
+            <li class="post-tag">
+              <span class="number-sign">#</span>
+              javascript
+            </li>
+          
+            <li class="post-tag">
+              <span class="number-sign">#</span>
+              angularjs
+            </li>
+          
+          </ul>
+                  
+    </div>
+  </div>
+</section>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by Hexo and Theme by Streak 
+  </div>
+  <div class="copright">
+    &copy; 2018
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
