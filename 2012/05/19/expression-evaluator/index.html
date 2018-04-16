@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Java实现表达式计算 - 風立ちぬ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=java>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a class="title-main" href="/" class="logo">風立ちぬ</a>
+    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+  </div>
+</header>
+      <main>
+        <section class="post">
+  <div class="post-bg-dark">
+    <div class="post-item">
+        <a class="post-title" href="/2012/05/19/expression-evaluator/">Java实现表达式计算</a>
+        <time class="post-date">May 19 2012</time>
+        <div class="post-content" >
+          <p>这周的Distributed System有个UDP的作业，第一小题是完成一个Client和一个Server，Clinet接受用户键盘输入，传送给Server,Server计算完返回给Client. 就是一些简单的加减乘除运算，如果是两个数，那么判断下中间的操作符即可，如果是多个数就行不通了。</p>
+<p>一些fellow student用的是javax的script来做的计算的，我就是闲的蛋疼，试着自己写个可以解析表达式计算的程序。宿舍没网，折腾了一下午总算像完成了。(*￣rǒ￣)</p>
+<a id="more"></a>
+<p>按照我的理解，原理应该是这样的，整个运算表达式可以化解成tree，每一个数或者操作符都是一个node,将这些node存起来，就构成一个tree，然后从最底层开始进行运算，知道最顶端就完成了。大概就是这样吧。︿(￣︶￣)︿</p>
+<p>代码如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testMy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span> out = <span class="number">0</span>;</span><br><span class="line">        node prt = <span class="keyword">null</span>;</span><br><span class="line">        node rt = <span class="keyword">null</span>;</span><br><span class="line">        ArrayList&lt;node&gt; myNode = <span class="keyword">new</span> ArrayList&lt;node&gt;();</span><br><span class="line">        ArrayList&lt;node&gt; obj = <span class="keyword">new</span> ArrayList&lt;node&gt;();</span><br><span class="line">        ArrayList&lt;node&gt; obj2 = <span class="keyword">new</span> ArrayList&lt;node&gt;();</span><br><span class="line">        String[] p = &#123; <span class="string">"+"</span>, <span class="string">"-"</span>, <span class="string">"*"</span>, <span class="string">"/"</span> &#125;;</span><br><span class="line">        String s = <span class="string">"1+2-3*4/5-6+7*8+9"</span>;</span><br><span class="line">        obj.add(<span class="keyword">new</span> node(s, prt, <span class="number">1</span>));</span><br><span class="line">        obj2.add(<span class="keyword">new</span> node(s, prt, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; p.length; ++i) &#123;</span><br><span class="line">            obj.clear();</span><br><span class="line">            obj.addAll(obj2);</span><br><span class="line">            obj2.clear();</span><br><span class="line"></span><br><span class="line">            Iterator&lt;node&gt; its = obj.iterator();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (its.hasNext()) &#123;</span><br><span class="line">                node tempnode = its.next();</span><br><span class="line">                String temp = tempnode.data;</span><br><span class="line">                String[] tempArray = temp.split(<span class="string">"\\"</span> + p[i]);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (tempArray.length &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                    rt = <span class="keyword">new</span> node(p[i], tempnode.parentNode, <span class="number">0</span>);</span><br><span class="line">                    myNode.add(rt);</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tempArray.length; ++j) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (tempArray[j].matches(<span class="string">"\\d+"</span>)) &#123;</span><br><span class="line">                            myNode.add(<span class="keyword">new</span> node(tempArray[j], rt,</span><br><span class="line">                                    Integer.parseInt(tempArray[j])));</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            obj2.add(<span class="keyword">new</span> node(tempArray[j], rt, <span class="number">0</span>));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    obj2.add(tempnode);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                prt = rt;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k = p.length - <span class="number">1</span>; k &gt;= <span class="number">0</span>; --k) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; myNode.size(); ++i) &#123;</span><br><span class="line">                node x = myNode.get(i).parentNode;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ((x != <span class="keyword">null</span>) &amp;&amp; (x.data.equals(p[k])) &amp;&amp;</span><br><span class="line">                        (myNode.get(i).used == <span class="keyword">false</span>)) &#123;</span><br><span class="line">                    out = myNode.get(i).result;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; myNode.size(); ++j) &#123;</span><br><span class="line">                        <span class="keyword">if</span> ((x == myNode.get(j).parentNode)) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (p[k].equals(<span class="string">"/"</span>)) &#123;</span><br><span class="line">                                out = out / myNode.get(j).result;</span><br><span class="line">                                myNode.get(j).used = <span class="keyword">true</span>;</span><br><span class="line">                                x.result = out;</span><br><span class="line">                            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (p[k].equals(<span class="string">"*"</span>)) &#123;</span><br><span class="line">                                out = out * myNode.get(j).result;</span><br><span class="line">                                myNode.get(j).used = <span class="keyword">true</span>;</span><br><span class="line">                                x.result = out;</span><br><span class="line">                            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (p[k].equals(<span class="string">"-"</span>)) &#123;</span><br><span class="line">                                myNode.get(j).used = <span class="keyword">true</span>;</span><br><span class="line">                                out = out - myNode.get(j).result;</span><br><span class="line">                                x.result = out;</span><br><span class="line">                            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (p[k].equals(<span class="string">"+"</span>)) &#123;</span><br><span class="line">                                myNode.get(j).used = <span class="keyword">true</span>;</span><br><span class="line">                                out = out + myNode.get(j).result;</span><br><span class="line">                                x.result = out;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(myNode.get(<span class="number">0</span>).result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">node</span> </span>&#123;</span><br><span class="line">    node parentNode;</span><br><span class="line">    <span class="keyword">public</span> String data;</span><br><span class="line">    <span class="keyword">double</span> result;</span><br><span class="line">    <span class="keyword">boolean</span> used;</span><br><span class="line"></span><br><span class="line">    node(String data, node parentNode, <span class="keyword">double</span> result) &#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">        <span class="keyword">this</span>.parentNode = parentNode;</span><br><span class="line">        <span class="keyword">this</span>.result = result;</span><br><span class="line">        <span class="keyword">this</span>.used = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">getData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+        <div class="post-bottom">
+          
+            <ul class="post-tag-list">
+            
+              <li class="post-tag">
+                <span class="number-sign">#</span>
+                java
+              </li>
+            
+            </ul>
+          
+        </div>          
+    </div>
+  </div>
+</section>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by Hexo and Theme by Streak 
+  </div>
+  <div class="copright">
+    &copy; 2018
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>

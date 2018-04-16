@@ -261,11 +261,9 @@ ul {
 .post-item .post-title {
   display: block;
   font-size: 32px;
-  font-weight: bold;
 }
 .post-item .post-date {
   color: #888;
-  font-weight: lighter;
 }
 .post-item .post-content {
   padding: 20px 0;
@@ -283,19 +281,31 @@ ul {
 .post-item .post-content a {
   border-bottom: 1px solid #333;
 }
-.post-item .post-more-link {
-  font-style: italic;
-  font-weight: lighter;
+.post-item .post-bottom .post-more-link {
+  float: right;
+  margin-right: 10px;
 }
-.post-item .post-tag-list {
+.post-item .post-bottom .post-more-link a {
+  border: 0;
+  color: #666;
+}
+.post-item .post-bottom .post-more-link a span {
+  font-weight: bold;
+  color: #e22020;
+  padding: 0 4px;
+}
+.post-item .post-bottom .post-more-link a:hover {
+  color: #e22020;
+}
+.post-item .post-bottom .post-tag-list {
+  float: left;
   display: flex;
 }
-.post-item .post-tag-list .post-tag {
+.post-item .post-bottom .post-tag-list .post-tag {
   margin-right: 10px;
-  color: #888;
-  font-weight: lighter;
+  color: #666;
 }
-.post-item .post-tag-list .post-tag .number-sign {
+.post-item .post-bottom .post-tag-list .post-tag .number-sign {
   color: #e22020;
   font-weight: bold;
 }
@@ -318,7 +328,6 @@ ul {
 }
 .archive .archive-block .archive-post time {
   color: #888;
-  font-weight: lighter;
   margin-right: 24px;
   width: 40px;
   display: table;
