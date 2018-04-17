@@ -283,7 +283,7 @@ ul {
 }
 .post-item .post-bottom .post-more-link {
   float: right;
-  margin-right: 10px;
+  margin: 0;
 }
 .post-item .post-bottom .post-more-link a {
   border: 0;
@@ -321,18 +321,20 @@ ul {
   font-size: 32px;
 }
 .archive .archive-block .archive-post {
-  display: flex;
+  display: table;
   padding-left: 20px;
   margin-bottom: 5px;
   line-height: 1.8;
 }
 .archive .archive-block .archive-post time {
   color: #888;
-  margin-right: 24px;
-  width: 40px;
-  display: table;
+  width: 80px;
+  display: table-cell;
 }
-.archive .archive-block .archive-post .title {
+.archive .archive-block .archive-post a {
+  display: table-cell;
+}
+.archive .archive-block .archive-post a .title {
   color: #4c4c4c;
 }
 .pagination {
@@ -363,6 +365,9 @@ ul {
   .archive .archive-block .archive-post {
     padding-left: 10px;
   }
+  .archive .archive-block .archive-post time {
+    width: 60px;
+  }
   .post-item {
     width: auto;
     padding: 50px 30px;
@@ -375,8 +380,13 @@ ul {
     line-height: 1.6;
     font-size: 14px;
   }
-  .post-item .post-more-link {
-    padding: 0px;
+  .post-item .post-bottom .post-tag-list {
+    margin-top: 20px;
+    float: initial;
+  }
+  .post-item .post-bottom .post-more-link {
+    float: initial;
+    margin-top: 20px;
   }
   .pagination {
     padding: 10px;
