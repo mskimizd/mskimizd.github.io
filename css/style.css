@@ -175,16 +175,6 @@ pre .keyword,
 pre .javascript .function {
   color: #cc99cc;
 }
-@font-face {
-  /* font-properties */
-  font-family: Ekaterina;
-  src: url("fonts/Ekaterina/Ekaterina.eot");
-  /* IE9 */
-  src: url("fonts/Ekaterina/Ekaterina.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */ url("fonts/Ekaterina/Ekaterina.woff") format("woff"), /* chrome、firefox */ url("fonts/Ekaterina/Ekaterina.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+ */ url("fonts/Ekaterina/Ekaterina.svg#Ekaterina") format("svg");
-  /* iOS 4.1- */
-  font-style: normal;
-  font-weight: normal;
-}
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -271,6 +261,16 @@ pre .javascript .function {
   -webkit-animation-name: jackInTheBox;
   animation-name: jackInTheBox;
 }
+@font-face {
+  /* font-properties */
+  font-family: Ekaterina;
+  src: url("fonts/Ekaterina/Ekaterina.eot");
+  /* IE9 */
+  src: url("fonts/Ekaterina/Ekaterina.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */ url("fonts/Ekaterina/Ekaterina.woff") format("woff"), /* chrome、firefox */ url("fonts/Ekaterina/Ekaterina.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+ */ url("fonts/Ekaterina/Ekaterina.svg#Ekaterina") format("svg");
+  /* iOS 4.1- */
+  font-style: normal;
+  font-weight: normal;
+}
 body {
   margin: 0;
   padding: 0;
@@ -287,6 +287,9 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+.container main {
+  min-height: calc( 100vh - 425px );
 }
 .header {
   background-color: #fff;
@@ -391,13 +394,15 @@ ul {
   float: left;
   display: flex;
 }
-.post-item .post-bottom .post-tag-list .post-tag {
+.post-item .post-bottom .post-tag-list .post-tag-list-item {
   margin-right: 10px;
   color: #666;
 }
-.post-item .post-bottom .post-tag-list .post-tag .number-sign {
+.post-item .post-bottom .post-tag-list .post-tag-list-item:before {
+  content: "#";
   color: #e22020;
   font-weight: bold;
+  padding-right: 4px;
 }
 .archive {
   margin: 50px 0 80px 0;
@@ -405,6 +410,22 @@ ul {
 .archive .archive-block {
   width: 900px;
   margin: 0 auto;
+}
+.archive .archive-block .archive-title {
+  text-align: center;
+  font-size: 18px;
+}
+.archive .archive-block .archive-title:before {
+  content: "# ";
+  color: #e22020;
+  font-weight: bold;
+  padding-right: 4px;
+}
+.archive .archive-block .archive-title:after {
+  content: " #";
+  color: #e22020;
+  font-weight: bold;
+  padding-left: 4px;
 }
 .archive .archive-block .archive-year {
   font-weight: normal;
