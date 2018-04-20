@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="/js/main.js"></script>
 </head>
-  <body>  
+  <body>
     <div class="container">
       <header class="header">
   <div class="blog-title animated jackInTheBox">
@@ -29,14 +29,13 @@
     <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
   </div>
 </header>
-        <main>
-        <section class="post animated fadeInDown">
-  <div class="post-bg-dark">
-    <div class="post-item">
-        <a class="post-title" href="/2013/01/06/shader1/">骑马与砍杀游戏中的shader初探</a>
-        <time class="post-date">January 6 2013</time>
-        <div class="post-content" >
-          <h3 id="什么是Shader？"><a href="#什么是Shader？" class="headerlink" title="什么是Shader？"></a>什么是Shader？</h3><p>可以翻译成着色器，简单的来说就是你的模型效果最后都是通过它在游戏里渲染才能看得到。做美工的同学都知道，在openbrf里不选择好着色器就可能看不到需要的效果，比如没有法线效果等等。</p>
+      <main class="animated fadeInDown">
+        <div class="post-item">
+  <a class="post-title" href="/2013/01/06/shader1/">骑马与砍杀游戏中的shader初探</a>
+  <time class="post-date">January 6</time>
+  <div class="post-content" >
+    
+      <h3 id="什么是Shader？"><a href="#什么是Shader？" class="headerlink" title="什么是Shader？"></a>什么是Shader？</h3><p>可以翻译成着色器，简单的来说就是你的模型效果最后都是通过它在游戏里渲染才能看得到。做美工的同学都知道，在openbrf里不选择好着色器就可能看不到需要的效果，比如没有法线效果等等。</p>
 <a id="more"></a>
 <h3 id="如何增加shader？"><a href="#如何增加shader？" class="headerlink" title="如何增加shader？"></a>如何增加shader？</h3><p>骑马与砍杀本身有一系列核心Shader，你可以在根目录的CommonRes里找到core_shaders.brf，当需要添加自己的shader时，你需要在自己的Mod里建一个shader的brf文件，然后在菜单上导入–新建着色层。至于中间的数据栏该填什么内容，我不清楚，这个急需补充。最重要一点，数据栏里的 技术 （Technique.），这个是核心，该处的内容即是.fx定设置的Technique名。</p>
 <h3 id="如何编写Technique？"><a href="#如何编写Technique？" class="headerlink" title="如何编写Technique？"></a>如何编写Technique？</h3><p>既然Technique是新增shader必须的，那么怎么写呢，这时候你就要下载官方的自定义shader包了。里面的内容，暂时你只需知道两个compile_fx.bat用于编译，mb.fx是我们需要编辑的。<br>简单介绍下文件结构，开始一大串宏和常量的定义。接下来是一些函数的定义，之后的节奏就是结构体的定义，VertexShader,  PixelShader, Technique. 这个顺序，反复。其中一些其他内容省略了，因为我也不知道他们是干嘛的。<br>Technique.是目前我们迫切需要的，有这个才能做成shader嘛。那我们呢举一个例子看看Technique的结构。</p>
@@ -49,22 +48,17 @@
 <blockquote><p>记住technique 由 pass 组成， pass 由编译完的VertexShader 和PixelShader 组成，<br>VertexShader与PixelShader需要两个结构体。</p>
 </blockquote>
 
-        </div>
-        <div class="post-bottom">
-          
-            <ul class="post-tag-list">
-            
-              <li class="post-tag">
-                <span class="number-sign">#</span>
-                shader
-              </li>
-            
-            </ul>
-          
-        </div>          
-    </div>
+    
   </div>
-</section>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/shader/">shader</a></li></ul>
+    
+    
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>
 
 
 
@@ -83,7 +77,7 @@
         </li>
       
         <li class="menu-item">
-          <a href="/" class="menu-item-link">About</a>
+          <a href="/about" class="menu-item-link">About</a>
         </li>
       
     </ul>
