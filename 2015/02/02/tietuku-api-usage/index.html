@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>贴图库开放平台接口使用 - 風立ちぬ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=贴图库,python>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title animated jackInTheBox">
+    <a class="title-main" href="/" class="logo">風立ちぬ</a>
+    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+  </div>
+</header>
+      <main class="animated fadeInDown">
+        <div class="post-item">
+  <a class="post-title" href="/2015/02/02/tietuku-api-usage/">贴图库开放平台接口使用</a>
+  <time class="post-date">February 2</time>
+  <div class="post-content" >
+    
+      <p>之前喜欢都是使用的七牛作为网站图片外链，后来需要做一个图片墙的应用，图片的数量激增，考虑七牛的每月10g流量可能不太够用，于是转而寻找其他图片外链。</p>
+<p>后来选择了贴图库，号称无限空间，无限流量，看起来很不错。<a id="more"></a> 但实际使用起来问题在于上传的图片生成的外链url中的文件名是随机生成的，像很多相册一样，不是很方便管理。</p>
+<p>用七牛的时候都是，直接url+图片名的，所以代码里很容易就将所有外链写到页面上，而贴图库的外链地址无法做到。还好提供了API。</p>
+<p>不过文档实例使用的是PHP, 我站点使用的Python，就仿照着写了一下，测试下没什么问题了，主要用于获取图片名和外链url的对应关系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> hmac</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="comment">## 从贴图库（tietuku.com）相册获取图片</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##获取相册信息API</span></span><br><span class="line"><span class="comment">#tmp_params=&#123; "deadline": deadline, "action": "get", "uid":1&#125;</span></span><br><span class="line"><span class="comment">#url="http://api.tietuku.com/v1/Album"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##秘钥</span></span><br><span class="line">AccessKey = <span class="string">''</span></span><br><span class="line">SecretKey = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##预设变量，也可通过相册API获取</span></span><br><span class="line">album_id = <span class="number">1</span>;</span><br><span class="line">album_pages = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">result = <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> page <span class="keyword">in</span> range(<span class="number">1</span>,album_pages+<span class="number">1</span>):</span><br><span class="line">    <span class="comment">##请求参数和URL</span></span><br><span class="line">    deadline = int(time.time())+ <span class="number">60</span></span><br><span class="line">    tmp_params=&#123; <span class="string">"deadline"</span>: deadline, <span class="string">"action"</span>: <span class="string">"album"</span>, <span class="string">"aid"</span>:album_id, <span class="string">"page_no"</span>:page&#125;</span><br><span class="line">    url=<span class="string">"http://api.tietuku.com/v1/List"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">##请求参数与秘钥生成Token</span></span><br><span class="line">    jsoncode = json.dumps(tmp_params)</span><br><span class="line">    encodedParam = base64.b64encode(jsoncode)</span><br><span class="line">    sign = hmac.new(SecretKey, encodedParam, digestmod=hashlib.sha1).hexdigest()</span><br><span class="line">    encodedSign = base64.b64encode(sign)</span><br><span class="line">    Token = AccessKey + <span class="string">':'</span> + encodedSign + <span class="string">':'</span> + encodedParam</span><br><span class="line"></span><br><span class="line">    <span class="comment">##发送http请求</span></span><br><span class="line">    parameters = &#123;<span class="string">"Token"</span>: Token&#125;</span><br><span class="line">    data = urllib.urlencode(parameters)</span><br><span class="line">    request=urllib2.Request(url,data)</span><br><span class="line">    response=urllib2.urlopen(request)</span><br><span class="line"></span><br><span class="line">    res_data = response.read()</span><br><span class="line">    res_dict=json.loads(res_data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> res_dict[<span class="string">"pic"</span>]:</span><br><span class="line">        result = result + e[<span class="string">"name"</span>]+<span class="string">" : "</span>+<span class="string">"\""</span>+e[<span class="string">"linkurl"</span>]+<span class="string">"\""</span> +<span class="string">",\n"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> result</span><br></pre></td></tr></table></figure>
+
+    
+  </div>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/python/">python</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/贴图库/">贴图库</a></li></ul>
+    
+    
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by 
+      <a href="https://hexo.io/">Hexo</a> 
+      and Theme by 
+      <a href="https://github.com/mskimizd/hexo-theme-streak">Streak</a> 
+  </div>
+  <div class="copright">
+    &copy; 2018
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
