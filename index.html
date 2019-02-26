@@ -36,6 +36,38 @@
             <div class="post-bg-dark">
             
             <div class="post-item">
+  <a class="post-title" href="/2019/02/26/daily-record-1/">Daily Record 1</a>
+  <time class="post-date">February 26</time>
+  <div class="post-content" >
+    
+      <p>今天部署系统时遇到一些坑，记录一下。</p>
+<p>首先是elasticsearch迁移索引数据时，es数据目录中索引文件夹用户和组都是elasticsearch,复制过去的索引数据默认是当前用户和组，需要修改为elasticsearch用户和组，否则es启动会报错。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R elasticsearch:elasticsearch ./</span><br></pre></td></tr></table></figure>
+<p>之后设置tomcat自启动中关键的几个步骤</p>               
+    
+  </div>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/systemctl/">systemctl</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/tomcat/">tomcat</a></li></ul>
+    
+    
+    
+      <p class="post-more-link">
+        <a href="/2019/02/26/daily-record-1/">
+          <span>[</span>
+          Read More
+          <span>]</span>
+        </a>
+      </p>
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>  
+    
+        
+            <div class="post-bg">
+            
+            <div class="post-item">
   <a class="post-title" href="/2018/04/12/angular-activity/">Angularjs实现Github的Contribution activity图表</a>
   <time class="post-date">April 12</time>
   <div class="post-content" >
@@ -62,7 +94,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2018/03/31/hello-world/">Hello World</a>
@@ -90,7 +122,7 @@
 </div>  
     
         
-            <div class="post-bg-dark">
+            <div class="post-bg">
             
             <div class="post-item">
   <a class="post-title" href="/2015/02/02/tietuku-api-usage/">贴图库开放平台接口使用</a>
@@ -120,7 +152,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2013/01/06/shader1/">骑马与砍杀游戏中的shader初探</a>
@@ -149,7 +181,7 @@
 </div>  
     
         
-            <div class="post-bg-dark">
+            <div class="post-bg">
             
             <div class="post-item">
   <a class="post-title" href="/2012/05/19/expression-evaluator/">Java实现表达式计算</a>
@@ -179,7 +211,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2011/12/13/cpp-snake/">C++贪吃蛇游戏</a>
@@ -237,7 +269,7 @@
       <a href="https://github.com/mskimizd/hexo-theme-streak">Streak</a> 
   </div>
   <div class="copright">
-    &copy; 2018
+    &copy; 2019
     <span class="author">
       mskimizd
     </span>

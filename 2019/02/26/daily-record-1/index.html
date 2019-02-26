@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Daily Record 1 - 風立ちぬ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=elasticsearch,tomcat,systemctl>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title animated jackInTheBox">
+    <a class="title-main" href="/" class="logo">風立ちぬ</a>
+    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+  </div>
+</header>
+      <main class="animated fadeInDown">
+        <div class="post-item">
+  <a class="post-title" href="/2019/02/26/daily-record-1/">Daily Record 1</a>
+  <time class="post-date">February 26</time>
+  <div class="post-content" >
+    
+      <p>今天部署系统时遇到一些坑，记录一下。</p>
+<p>首先是elasticsearch迁移索引数据时，es数据目录中索引文件夹用户和组都是elasticsearch,复制过去的索引数据默认是当前用户和组，需要修改为elasticsearch用户和组，否则es启动会报错。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R elasticsearch:elasticsearch ./</span><br></pre></td></tr></table></figure>
+<p>之后设置tomcat自启动中关键的几个步骤</p>
+<a id="more"></a>
+<p>1.编辑 catalina.sh脚本文件<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Copy CATALINA_BASE ......</span></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">CATALINA_PID=<span class="string">"<span class="variable">$CATALINA_BASE</span>/tomcat.pid"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Ensure that ......</span></span><br><span class="line">......</span><br></pre></td></tr></table></figure></p>
+<p>2.创建tomcat.service文件<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Tomcat</span><br><span class="line">After=syslog.target network.target remote-fs.target nss-lookup.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line"></span><br><span class="line">PIDFile=/TOMCAT_PATH/tomcat.pid</span><br><span class="line">ExecStart=/=/TOMCAT_PATH/bin/startup.sh</span><br><span class="line">ExecReload=/bin/<span class="built_in">kill</span> -s HUP <span class="variable">$MAINPID</span></span><br><span class="line">ExecStop=/bin/<span class="built_in">kill</span> -s QUIT <span class="variable">$MAINPID</span></span><br><span class="line">PrivateTmp=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></p>
+<p>3.设置脚本启动<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp tomcat.service /etc/systemd/system/</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl <span class="built_in">enable</span> tomcat.service</span><br></pre></td></tr></table></figure></p>
+
+    
+  </div>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/systemctl/">systemctl</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/tomcat/">tomcat</a></li></ul>
+    
+    
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by 
+      <a href="https://hexo.io/">Hexo</a> 
+      and Theme by 
+      <a href="https://github.com/mskimizd/hexo-theme-streak">Streak</a> 
+  </div>
+  <div class="copright">
+    &copy; 2019
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
