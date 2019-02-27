@@ -36,6 +36,47 @@
             <div class="post-bg-dark">
             
             <div class="post-item">
+  <a class="post-title" href="/2019/02/27/daily-recoard-2/">Daily Record 2</a>
+  <time class="post-date">February 27</time>
+  <div class="post-content" >
+    
+      <p>今天在学习在express在中使用passport实现登陆验证，按照官网的文档写完了一个简单的demo。</p>
+<p>发现登陆流程没问题，在验证请求时发现isAuthenticated的值一直是false，等于session中没有登陆状态。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.isAuthenticated()); <span class="comment">//false;</span></span><br><span class="line">  <span class="keyword">if</span>(req.isAuthenticated() || req.path==<span class="string">"/users/login"</span>)&#123;</span><br><span class="line">    next();    </span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    res.json(&#123;</span><br><span class="line">      code: <span class="number">300</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>后来在github上passport的<a href="https://github.com/jaredhanson/passport/issues/591" target="_blank" rel="noopener">issuse#591</a>中发现了解决办法</p>
+<blockquote>
+<p>@srpalomino Thanks for response. I found out I needed to add <code>withCredentials</code> flag in Axios, but it took me some time.</p>
+</blockquote>
+<p>由于我用的是vue-resource，就按照之前的设置，发现没有效果<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.http.options.xhr = &#123; <span class="attr">withCredentials</span>: <span class="literal">true</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后又是在vue-resource的的<a href="https://github.com/pagekit/vue-resource/issues/323" target="_blank" rel="noopener">issuse#323</a>发现新版本后设置不一样了。</p>
+<p>需要按照如下设置<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Vue.http.interceptors.push(<span class="function">(<span class="params">request, next</span>) =&gt;</span> &#123;</span><br><span class="line">    request.credentials = <span class="literal">true</span></span><br><span class="line">    next()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>同时后台Access-Control-Allow-Origin不能为*了，重新配置express跨域<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.use(cors(&#123;</span><br><span class="line">  <span class="string">"origin"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="string">"credentials"</span>: <span class="literal">true</span></span><br><span class="line">&#125;))</span><br></pre></td></tr></table></figure></p>
+<p>完成之后，登陆后isAuthenticated就正常为true了。</p>
+
+    
+  </div>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/express/">express</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/passport/">passport</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/vueResource/">vueResource</a></li></ul>
+    
+    
+    
+      <p class="post-more-link">
+        <a href="/2019/02/27/daily-recoard-2/">
+          <span>[</span>
+          Read More
+          <span>]</span>
+        </a>
+      </p>
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>  
+    
+        
+            <div class="post-bg">
+            
+            <div class="post-item">
   <a class="post-title" href="/2019/02/26/daily-record-1/">Daily Record 1</a>
   <time class="post-date">February 26</time>
   <div class="post-content" >
@@ -65,7 +106,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2018/04/12/angular-activity/">Angularjs实现Github的Contribution activity图表</a>
@@ -94,7 +135,7 @@
 </div>  
     
         
-            <div class="post-bg-dark">
+            <div class="post-bg">
             
             <div class="post-item">
   <a class="post-title" href="/2018/03/31/hello-world/">Hello World</a>
@@ -122,7 +163,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2015/02/02/tietuku-api-usage/">贴图库开放平台接口使用</a>
@@ -152,7 +193,7 @@
 </div>  
     
         
-            <div class="post-bg-dark">
+            <div class="post-bg">
             
             <div class="post-item">
   <a class="post-title" href="/2013/01/06/shader1/">骑马与砍杀游戏中的shader初探</a>
@@ -181,7 +222,7 @@
 </div>  
     
         
-            <div class="post-bg">
+            <div class="post-bg-dark">
             
             <div class="post-item">
   <a class="post-title" href="/2012/05/19/expression-evaluator/">Java实现表达式计算</a>
@@ -211,7 +252,7 @@
 </div>  
     
         
-            <div class="post-bg-dark">
+            <div class="post-bg">
             
             <div class="post-item">
   <a class="post-title" href="/2011/12/13/cpp-snake/">C++贪吃蛇游戏</a>
