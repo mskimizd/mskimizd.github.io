@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   
-  <title>Daily Record 2 - 風立ちぬ</title>
+  <title>日常记录【贰】 - Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   
   <meta name="keywords" content=express,passport,vueResource>
@@ -25,18 +25,22 @@
     <div class="container">
       <header class="header">
   <div class="blog-title animated jackInTheBox">
-    <a class="title-main" href="/" class="logo">風立ちぬ</a>
-    <div  class="title-sub">Le vent se leve, il faut tenter de vivre</div>
+    <a class="title-main" href="/" class="logo"><img src="/img/geek_magic_rubics_128px.png" width="80px"></a>
+    <!-- <div  class="title-sub">Life is fantastic.</div> -->
+    <div class="title-slogn">
+      life is <span class="slogn-mphasize">fantastic_</span>
+    </div>
   </div>
 </header>
       <main class="animated fadeInDown">
         <div class="post-item">
-  <a class="post-title" href="/2019/02/27/daily-recoard-2/">Daily Record 2</a>
-  <time class="post-date">February 27</time>
+  <a class="post-title" href="/2019/02/27/daily-recoard-2/">日常记录【贰】</a>
+  <time class="post-date">February 27, 2019 </time>
   <div class="post-content" >
     
       <p>今天在学习在express在中使用passport实现登陆验证，按照官网的文档写完了一个简单的demo。</p>
 <p>发现登陆流程没问题，在验证请求时发现isAuthenticated的值一直是false，等于session中没有登陆状态。</p>
+<a id="more"></a>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.isAuthenticated()); <span class="comment">//false;</span></span><br><span class="line">  <span class="keyword">if</span>(req.isAuthenticated() || req.path==<span class="string">"/users/login"</span>)&#123;</span><br><span class="line">    next();    </span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    res.json(&#123;</span><br><span class="line">      code: <span class="number">300</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>后来在github上passport的<a href="https://github.com/jaredhanson/passport/issues/591" target="_blank" rel="noopener">issuse#591</a>中发现了解决办法</p>
 <blockquote>

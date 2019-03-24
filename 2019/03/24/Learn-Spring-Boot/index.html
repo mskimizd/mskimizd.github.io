@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>学习 Spring Boot - Life</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content=Spring,Spring Boot>
+  
+    <meta name="description" content="a hexo site">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/main.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title animated jackInTheBox">
+    <a class="title-main" href="/" class="logo"><img src="/img/geek_magic_rubics_128px.png" width="80px"></a>
+    <!-- <div  class="title-sub">Life is fantastic.</div> -->
+    <div class="title-slogn">
+      life is <span class="slogn-mphasize">fantastic_</span>
+    </div>
+  </div>
+</header>
+      <main class="animated fadeInDown">
+        <div class="post-item">
+  <a class="post-title" href="/2019/03/24/Learn-Spring-Boot/">学习 Spring Boot</a>
+  <time class="post-date">March 24, 2019 </time>
+  <div class="post-content" >
+    
+      <h2 id="搭建Spring-Boot开发环境"><a href="#搭建Spring-Boot开发环境" class="headerlink" title="搭建Spring Boot开发环境"></a>搭建Spring Boot开发环境</h2><p>通常有以下几种方法搭建Spring Boot开发环境</p>
+<blockquote>
+<ol>
+<li>直接下载 <a href="https://spring.io/tools3/sts/all" target="_blank" rel="noopener">Spring Tool Suite</a> 集成环境（包含Eclipse）安装使用</li>
+<li>在现有的Eclipse基础上安装Spring Tool Suite插件</li>
+<li>在Visual Studio Code上安装JAVA和Spring插件（STS4开始）</li>
+</ol>
+</blockquote>
+<p>由于已经长期在用Eclipse，所以选择了安装插件的方式实现对Spring Boot的支持。</p>
+<a id="more"></a>
+<h2 id="插件安装-在线-OR-离线"><a href="#插件安装-在线-OR-离线" class="headerlink" title="插件安装 在线 OR 离线?"></a>插件安装 在线 OR 离线?</h2><p>Eclipse上Spring Tool Suite插件的安装可以分为在线与离线两种方式。</p>
+<p>在线方式比较简单，通过Eclipse Marketplace中搜索Spring安装即可。缺点就是网速慢的话下载安装要耗费不少时间。此外，有一定几率安装会失败，这个网上也有不少同样的情况，都是在线安装的。<br>离线方式需要先下载Spring Tool Suit包，通过Install New Software来安装，具体教程百度一下。这里需要注意，Spring官网上的Spring Tool Suit包不同版本对应不同的Eclipse版本。确保下载到相对应的版本才能正确安装。</p>
+<p>这次我选择了在线安装，因为网络原因，下离线包的速度也是特别慢，不如直接在线安装。第一次安装出现了失败的情况。后面重新安装成功了。</p>
+<h2 id="创建一个Spring-Boot-Demo"><a href="#创建一个Spring-Boot-Demo" class="headerlink" title="创建一个Spring Boot Demo"></a>创建一个Spring Boot Demo</h2><p>安装完成之后，New Project中就出现了Spring Boot, 选择Spring Starter Project，后面可以不需要修改什么什么，直接下一步到完成即可，反正是demo。</p>
+<p>这里需要注意的一点时，第一次创建时，通过Maven构建项目要花很久，同样是网络原因嘛，最好先将Maven的源更改为国内的源比如阿里的。</p>
+<h2 id="配置Maven源"><a href="#配置Maven源" class="headerlink" title="配置Maven源"></a>配置Maven源</h2><p>选择某个目录，新建一个配置好源的setting.xml文件和repository文件夹<br>Window-&gt;preferences-&gt;Maven-&gt;User Settings<br>User Settings栏选择新建的setting.xml，点击open file，然后apple and close。<br>完成！</p>
+<h2 id="额外：关于kafka"><a href="#额外：关于kafka" class="headerlink" title="额外：关于kafka"></a>额外：关于kafka</h2><p>在新建的demo工程配置了kafka和kafka_client，写了一个简单的生产者消费者demo。发现消费者启动时，kafka_client会打印一堆DEBUG日志，再三查阅资料未果，遂放弃。因为中间发现了spring-kafka这个东西，特别好用，在Spring Boodt中写这样一个demo更简单，也没有日志问题。具体详情后续博文再更~</p>
+
+    
+  </div>
+  <div class="post-bottom">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Spring-Boot/">Spring Boot</a></li></ul>
+    
+    
+    
+    <div style="clear:both;"></div>                 
+  </div>         
+</div>
+
+
+
+
+      </main>
+      <footer class="footer">
+  <nav class="blog-nav">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">About</a>
+        </li>
+      
+    </ul>
+  </nav>  
+  <div class="credit">
+      Powered by 
+      <a href="https://hexo.io/">Hexo</a> 
+      and Theme by 
+      <a href="https://github.com/mskimizd/hexo-theme-streak">Streak</a> 
+  </div>
+  <div class="copright">
+    &copy; 2019
+    <span class="author">
+      mskimizd
+    </span>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
