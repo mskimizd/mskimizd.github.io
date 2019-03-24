@@ -298,18 +298,14 @@ ul {
   text-align: center;
   padding: 100px 0 50px 0;
 }
-.header .blog-title .title-main {
-  color: #e22020;
-  padding: 5px 10px 5px 14px;
+.header .blog-title .title-slogn {
   font-weight: bold;
-  letter-spacing: 4px;
-}
-.header .blog-title .title-sub {
-  font-family: Ekaterina;
-  font-weight: bold;
-  color: #777;
+  font-size: 24px;
   margin: 10px;
   height: 60px;
+}
+.header .blog-title .title-slogn .slogn-mphasize {
+  color: #e22020;
 }
 .footer {
   background-color: #fff;
@@ -361,6 +357,16 @@ ul {
 .post-item .post-content {
   padding: 20px 0;
   line-height: 1.8;
+}
+.post-item .post-content h1,
+.post-item .post-content h2,
+.post-item .post-content h3,
+.post-item .post-content h4,
+.post-item .post-content h5 {
+  font-weight: 400;
+}
+.post-item .post-content p {
+  padding: 0;
 }
 .post-item .post-content blockquote {
   margin: 72px 24px;
